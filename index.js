@@ -3,19 +3,18 @@ const Schema = mongoose.Schema;
 const dotenv = require('dotenv').load();
 const StatsService = require('./statsService');
 
-const mongoUri = process.env.MONGOLAB_URI;
+const mongoUri = process.env.MONGODB_URI;
 
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
-console.log(':::', process.env);
-mongoose.connect(mongoUri, { useMongoClient: true  }, function (err, res) {
+mongoose.connect(mongoUri, { useMongoClient: true }, (err, res) => {
     if (err) {
-        console.log ('ERROR connecting to: ' + mongoUri + '. ' + err);
+        console.log (`ERROR connecting to: ${mongoUri} - ${err}`);
 
         return;
     }
 
-    console.log ('Succeeded connected to: ' + mongoUri);
+    console.log (`Succeeded connected to: ${mongoUri}`);
 });
 
 let isWorkerComplete = false;
