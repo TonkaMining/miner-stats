@@ -15,7 +15,7 @@ const StatsService = {
             throw new Error(`Invalid credentials, minerId is undefined: ${minerId}`);
         }
 
-        return request.get(`${BASE_URL}/${minerId}/currentStats`);
+        return request.get(`${BASE_URL}/${minerId}/currentStats`).then((response) => response);
     },
 
     getCurrentWorkerStats: function getCurrentWorkerStats(minerId = MINER_ID, workerId = WORKER_ID) {

@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup-env": "node ./scripts/createDevelopmentEnvFile"
+    "start": "echo Starting...",
+    "setup-env": "node ./scripts/createDevelopmentEnvFile",
+    "poll": "node ./index"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
-    "dotenv": "^4.0.0"
+    "dotenv": "^4.0.0",
+    "mongoose": "4.11.3"
   }
 }
