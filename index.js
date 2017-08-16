@@ -1,3 +1,6 @@
+const dotenv = require('dotenv');
+dotenv.load();
+
 const StatsService = require('./statsService');
 
 StatsService.getCurrentMinerStats().then(({ data }) => {
