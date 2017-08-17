@@ -2,7 +2,6 @@
   "name": "miner-stats",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "echo Starting...",
     "setup-env": "node ./scripts/createDevelopmentEnvFile",
