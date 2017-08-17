@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const dotenv = require('dotenv').load();
 const StatsService = require('./statsService');
+const MinerModel = require('./models/MinerModel');
+const WorkerModel = require('./models/WorkerModel');
 
 const mongoUri = process.env.MONGODB_URI;
 
@@ -14,7 +16,7 @@ mongoose.connect(mongoUri, { useMongoClient: true }, (err, res) => {
         return;
     }
 
-    console.log (`Succeeded connected to: ${mongoUri}`);
+    console.log (`Successfully connected to: ${mongoUri}`);
 });
 
 let isWorkerComplete = false;
@@ -43,33 +45,6 @@ function completeWorker() {
 
     closeConnection();
 }
-
-const minerSchema = Schema({
-    time: Number,
-    lastSeen: Number,
-    reportedHashrate: Number,
-    currentHashrate: Number,
-    validShares: Number,
-    invalidShares: Number,
-    staleShares: Number,
-    averageHashrate: Number,
-    activeWorkers: Number,
-    unpaid: Number,
-    unconfirmed: mongoose.Schema.Types.Mixed
-}, { collection: 'miners' });
-const MinerModel = mongoose.model('MinerModel', minerSchema);
-
-const workerSchema = Schema({
-    time: Number,
-    lastSeen: Number,
-    reportedHashrate: Number,
-    currentHashrate: Number,
-    validShares: Number,
-    invalidShares: Number,
-    staleShares: Number,
-    averageHashrate: Number
-}, { collection: 'workers' });
-const WorkerModel = mongoose.model('WorkerModel', workerSchema);
 
 StatsService.getCurrentMinerStats().then(({ data }) => {
     const miner = new MinerModel(data.data);
