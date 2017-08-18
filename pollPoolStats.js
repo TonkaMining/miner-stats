@@ -3,19 +3,19 @@ const StatsService = require('./statsService');
 const MinerModel = require('./models/MinerModel');
 const WorkerModel = require('./models/WorkerModel');
 
-let isWorkerComplete = false;
-let isMinerComplete = false;
-
-function isCloseable() {
-    return isWorkerComplete && isMinerComplete;
-}
-
 function closeConnection() {
     if (!isCloseable()) {
         return;
     }
 
     mongoose.disconnect();
+}
+
+let isWorkerComplete = false;
+let isMinerComplete = false;
+
+function isCloseable() {
+    return isWorkerComplete && isMinerComplete;
 }
 
 function completeMiner() {
@@ -31,23 +31,31 @@ function completeWorker() {
 }
 
 function pollPoolStats() {
-    StatsService.getCurrentMinerStats().then(({ data }) => {
-        const miner = new MinerModel(data.data);
+    StatsService.getCurrentMinerStats()
+        .then(({ data }) => {
+            const miner = new MinerModel(data.data);
 
-        miner.save().then(() => completeMiner());
-    })
-    .catch((error) => {
-        throw new Error('ERROR::: ', error);
-    });
+            miner.save()
+                .then(() => completeMiner())
+                .catch((error) => {
+                    console.error('Error saving miner record', error);
 
-    StatsService.getCurrentWorkerStats().then(({ data }) => {
-        const worker = new WorkerModel(data.data);
+                    completeMiner();
+                });
+        });
 
-        worker.save().then(() => completeWorker());
-    })
-    .catch((error) => {
-        throw new Error('ERROR::: ', error);
-    });
+    StatsService.getCurrentWorkerStats()
+        .then(({ data }) => {
+            const worker = new WorkerModel(data.data);
+
+            worker.save()
+                .then(() => completeWorker())
+                .catch((error) => {
+                    console.error('Error saving miner record', error);
+
+                    completeWorker();
+                });
+        });
 }
 
 module.exports = pollPoolStats;
