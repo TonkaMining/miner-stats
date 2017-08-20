@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 
 const workerSchema = Schema({
     time: Number,
+    minerId: String,
+    workerId: String,
     lastSeen: Number,
     reportedHashrate: Number,
     currentHashrate: Number,

@@ -1,8 +1,5 @@
-'use strict';
 const request = require('axios');
 
-const MINER_ID = process.env.MINER_ID || '';
-const WORKER_ID = process.env.WORKER_ID || '';
 const BASE_URL = 'https://api.ethermine.org/miner';
 
 function hasCredentials(credential) {
@@ -10,7 +7,7 @@ function hasCredentials(credential) {
 }
 
 const StatsService = {
-    getCurrentMinerStats: function getCurrentMinerStats(minerId = MINER_ID) {
+    getCurrentMinerStats: function getCurrentMinerStats(minerId) {
         if (!hasCredentials(minerId)) {
             throw new Error(`Invalid credentials, minerId is undefined: ${minerId}`);
         }
@@ -18,7 +15,7 @@ const StatsService = {
         return request.get(`${BASE_URL}/${minerId}/currentStats`).then((response) => response);
     },
 
-    getCurrentWorkerStats: function getCurrentWorkerStats(minerId = MINER_ID, workerId = WORKER_ID) {
+    getCurrentWorkerStats: function getCurrentWorkerStats(minerId, workerId) {
         if (!hasCredentials(minerId) || !hasCredentials(workerId)) {
             throw new Error(`Invalid credentials, minerId or workerId is undefined: minerId: ${minerId} workerId: ${workerId}`);
         }

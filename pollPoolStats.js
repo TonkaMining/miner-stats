@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const StatsService = require('./statsService');
-const MinerModel = require('./models/MinerModel');
-const WorkerModel = require('./models/WorkerModel');
+const saveMinerStats = require('./miner/miner.controller');
+const saveWorkerStats = require('./worker/worker.controller');
+
+const MINER_ID = process.env.MINER_ID || '';
+const WORKER_ID = process.env.WORKER_ID || '';
 
 function closeConnection() {
     if (!isCloseable()) {
@@ -31,30 +34,16 @@ function completeWorker() {
 }
 
 function pollPoolStats() {
-    StatsService.getCurrentMinerStats()
-        .then(({ data }) => {
-            const miner = new MinerModel(data.data);
-
-            miner.save()
-                .then(() => completeMiner())
-                .catch((error) => {
-                    console.error('Error saving miner record', error);
-
-                    completeMiner();
-                });
+    StatsService.getCurrentMinerStats(MINER_ID)
+        .then(({ data }) => saveMinerStats(data, MINER_ID, completeMiner))
+        .catch((error) => {
+            throw error;
         });
 
-    StatsService.getCurrentWorkerStats()
-        .then(({ data }) => {
-            const worker = new WorkerModel(data.data);
-
-            worker.save()
-                .then(() => completeWorker())
-                .catch((error) => {
-                    console.error('Error saving miner record', error);
-
-                    completeWorker();
-                });
+    StatsService.getCurrentWorkerStats(MINER_ID, WORKER_ID)
+        .then(({ data }) => saveWorkerStats(data, MINER_ID, WORKER_ID, completeWorker))
+        .catch((error) => {
+            throw error;
         });
 }
 
