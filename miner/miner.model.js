@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const minerSchema = Schema({
-    time: Number,
+    time: { type: Number, index: true, unique: true },
     minerId: String,
     lastSeen: Number,
     reportedHashrate: Number,

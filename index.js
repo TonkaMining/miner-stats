@@ -16,7 +16,16 @@ mongoose.connect(mongoUri, { useMongoClient: true }, (err, res) => {
     console.log (`Successfully connected to: ${mongoUri}`);
 });
 
-(function getStats() {
-    pollPoolStats();
-}());
+pollPoolStats();
+
+const TEN_MINUTES = 1000 * 60 * 10;
+global.setTimeout(
+    () => {
+        console.log('\n--- ---- ---');
+        console.log('10 minutes elapsed, closing connection');
+        mongoose.disconnect();
+        console.log('\n--- ---- ---');
+    },
+    TEN_MINUTES
+);
 

@@ -1,16 +1,21 @@
 const MinerModel = require('./miner.model');
 
-function saveMinerStats(response, minerId, onComplete) {
-    const miner = new MinerModel(response.data);
+function _saveMinerStats(minerStatData, minerId) {
+    const miner = new MinerModel(minerStatData);
     miner.minerId = minerId;
 
     miner.save()
-        .then(() => onComplete())
         .catch((error) => {
-            console.error('Error saving miner record', error);
-
-            onComplete();
+            console.error('Error saving miner record:', error.message);
         });
 }
 
-module.exports = saveMinerStats;
+function saveMinerHistoricalStats(response, minerId) {
+    for (let i = 0; i < response.data.length; i++) {
+        _saveMinerStats(response.data[i], minerId);
+    }
+}
+
+module.exports = {
+    saveMinerHistoricalStats: saveMinerHistoricalStats
+};

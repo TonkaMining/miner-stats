@@ -7,21 +7,29 @@ function hasCredentials(credential) {
 }
 
 const StatsService = {
-    getCurrentMinerStats: function getCurrentMinerStats(minerId) {
+    getHistoricalMinerStats: function getHistoricalMinerStats(minerId) {
         if (!hasCredentials(minerId)) {
             throw new Error(`Invalid credentials, minerId is undefined: ${minerId}`);
         }
 
-        return request.get(`${BASE_URL}/${minerId}/currentStats`).then((response) => response);
+        return request.get(`${BASE_URL}/${minerId}/history`).then((response) => response);
     },
 
-    getCurrentWorkerStats: function getCurrentWorkerStats(minerId, workerId) {
-        if (!hasCredentials(minerId) || !hasCredentials(workerId)) {
-            throw new Error(`Invalid credentials, minerId or workerId is undefined: minerId: ${minerId} workerId: ${workerId}`);
-        }
+    // getCurrentMinerStats: function getCurrentMinerStats(minerId) {
+    //     if (!hasCredentials(minerId)) {
+    //         throw new Error(`Invalid credentials, minerId is undefined: ${minerId}`);
+    //     }
 
-        return request.get(`${BASE_URL}/${minerId}/worker/${workerId}/currentStats`);
-    }
+    //     return request.get(`${BASE_URL}/${minerId}/currentStats`).then((response) => response);
+    // },
+
+    // getCurrentWorkerStats: function getCurrentWorkerStats(minerId, workerId) {
+    //     if (!hasCredentials(minerId) || !hasCredentials(workerId)) {
+    //         throw new Error(`Invalid credentials, minerId or workerId is undefined: minerId: ${minerId} workerId: ${workerId}`);
+    //     }
+
+    //     return request.get(`${BASE_URL}/${minerId}/worker/${workerId}/currentStats`);
+    // }
 }
 
 module.exports = StatsService;
